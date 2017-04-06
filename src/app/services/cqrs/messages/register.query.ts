@@ -1,4 +1,4 @@
-import { IQuery } from './../cqrs/cqrs.bus';
+import { IQuery } from './../IQuery.interface';
 
 export class RegisterQuery implements IQuery<guid>
 {

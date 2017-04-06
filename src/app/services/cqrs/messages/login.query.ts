@@ -1,4 +1,4 @@
-import { IQuery } from './../cqrs/cqrs.bus';
+import { IQuery } from './../IQuery.interface';
 
 export class LoginQuery implements IQuery<guid>
 {
