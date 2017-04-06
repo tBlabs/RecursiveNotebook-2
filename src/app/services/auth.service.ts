@@ -18,7 +18,13 @@ export class AuthService
 
     }
 
-    Login(email: string, pass: string): Observable<LoginStatus>
+    public IsLoggedIn(): boolean
+    {
+        return (this._storage.GetSessionToken() != "");
+    }
+
+
+    public Login(email: string, pass: string): Observable<LoginStatus>
     {
         let ret = new Subject();
 
@@ -49,7 +55,7 @@ export class AuthService
     }
 
 
-    Register(email: string, pass: string): Observable<RegisterStatus>
+    public Register(email: string, pass: string): Observable<RegisterStatus>
     {
         let ret = new Subject();
 
@@ -75,7 +81,7 @@ export class AuthService
         return ret;
     }
 
-    Logout(): void
+    public Logout(): void
     {
         this._storage.SetSessionToken("");
     }

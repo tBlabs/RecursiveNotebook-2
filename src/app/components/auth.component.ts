@@ -1,5 +1,5 @@
 import { AuthService, LoginStatus, RegisterStatus } from './../services/auth.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 enum AuthFormViewState
 {
@@ -29,7 +29,7 @@ enum AuthFormViewState
   `,
   styles: ['.red-border { border-color: red }']
 })
-export class AuthComponent
+export class AuthComponent implements OnInit
 {
   private inputsVisible: boolean = true;
   private loginButtonVisible: boolean = true;
@@ -39,7 +39,19 @@ export class AuthComponent
   private emailInputError: boolean = false; // to nie powinno mieć nazwy określającej błąd a coś bardziej powiązanego z ramką
   private passwordInputError: boolean = false; // to nie powinno mieć nazwy określającej błąd a coś bardziej powiązanego z ramką
 
-  SetFormState(state: AuthFormViewState)
+  constructor(private _auth: AuthService)
+  {
+  }
+
+  ngOnInit()
+  {
+    if (this._auth.IsLoggedIn())
+      this.SetFormState(AuthFormViewState.LogedIn);
+    else
+      this.SetFormState(AuthFormViewState.Initial);
+  }
+
+  private SetFormState(state: AuthFormViewState)
   {
     this.inputsVisible = true;
     this.loginButtonText = "Login";
@@ -78,12 +90,8 @@ export class AuthComponent
     }
   }
 
-  constructor(private _auth: AuthService)
-  {
-    this.SetFormState(AuthFormViewState.Initial);
-  }
 
-  Login(email: string, pass: string): void
+  private Login(email: string, pass: string): void
   {
     this.SetFormState(AuthFormViewState.Logging);
 
@@ -101,7 +109,7 @@ export class AuthComponent
     });
   }
 
-  Register(email: string, pass: string): void
+  private Register(email: string, pass: string): void
   {
     this.SetFormState(AuthFormViewState.Registering);
 
@@ -117,7 +125,7 @@ export class AuthComponent
     });
   }
 
-  Logout()
+  private Logout()
   {
     this._auth.Logout();
 
