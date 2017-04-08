@@ -3,20 +3,26 @@ import { LoginQuery } from './cqrs/messages/login.query';
 import { StorageService } from './storage.service';
 import { CqrsBus } from './cqrs/cqrs-bus.service';
 import { Observable } from 'rxjs/Observable';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Subject } from "rxjs/Subject";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
-export enum LoginStatus { LoggedIn, UserNotFound, WrongPassword }
-export enum RegisterStatus { Registered, EmailTaken }
+export enum LoginStatus { LoggedIn, UserNotFound, WrongPassword, ConnectionProblem }
+export enum RegisterStatus { Registered, EmailTaken, ConnectionProblem }
 
 
 @Injectable()
 export class AuthService
 {
+    public LoginStatusChanged = new BehaviorSubject<boolean>(false);
+
     constructor(private _cqrs: CqrsBus, private _storage: StorageService)
     {
+        console.log("Is logged in?: " + this.IsLoggedIn());
 
+        this.LoginStatusChanged.next(this.IsLoggedIn());
     }
+
 
     public IsLoggedIn(): boolean
     {
@@ -35,6 +41,8 @@ export class AuthService
             this._storage.SetSessionToken(token);
 
             ret.next(LoginStatus.LoggedIn);
+
+            this.LoginStatusChanged.next(true);
         },
             (err) =>
             {
@@ -45,6 +53,8 @@ export class AuthService
                     case 404: ret.next(LoginStatus.UserNotFound);
                         break;
                     case 401: ret.next(LoginStatus.WrongPassword);
+                        break;
+                    default: ret.next(LoginStatus.ConnectionProblem);
                         break;
                 }
 
@@ -66,6 +76,8 @@ export class AuthService
             this._storage.SetSessionToken(token);
 
             ret.next(RegisterStatus.Registered);
+
+            this.LoginStatusChanged.next(true);
         },
             (err) =>
             {
@@ -74,6 +86,8 @@ export class AuthService
                 switch (err)
                 {
                     case 406: ret.next(RegisterStatus.EmailTaken);
+                        break;
+                    default: ret.next(LoginStatus.ConnectionProblem);
                         break;
                 }
             });
@@ -84,6 +98,8 @@ export class AuthService
     public Logout(): void
     {
         this._storage.SetSessionToken("");
+
+        this.LoginStatusChanged.next(false);
     }
 
 }

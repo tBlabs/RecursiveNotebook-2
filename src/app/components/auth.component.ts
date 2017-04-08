@@ -10,24 +10,42 @@ enum AuthFormViewState
 @Component({
   selector: 'auth',
   template: `
-  <input type="text" #email
-         [hidden]="!inputsVisible"
-         [class.red-border]="emailInputError"
-         value="foo">
-  <input type="text" #pass 
-         [hidden]="!inputsVisible"    
-         [class.red-border]="passwordInputError"
-         value="bar">
-         
-  <button *ngIf="loginButtonVisible"
-         (click)="Login(email.value, pass.value)">{{ loginButtonText }}</button>
-  <button *ngIf="logoutButtonVisible" 
-         (click)="Logout()">Logout</button>
+    <div class="form-inline pull-right little-margin-top">
 
-  <button *ngIf="loginButtonVisible"
-         (click)="Register(email.value, pass.value)">{{ registerButtonText }}</button>
-  `,
-  styles: ['.red-border { border-color: red }']
+        <div class="form-group">
+            <input type="text" #email                  
+                 [ngClass]="{ 'alert-danger': emailInputError, 'hide': !inputsVisible }"
+                 placeholder="E-mail"
+                 class="form-control"
+                 value="foo">
+         </div>
+        
+          <div class="form-group" >   
+             <input type="password" #pass                
+                 [ngClass]="{ 'alert-danger': passwordInputError, 'hide': !inputsVisible }"
+                 placeholder="Password" 
+                 class="form-control"
+                 value="bar">
+          </div> 
+        
+           <div class="form-group">
+                <button *ngIf="loginButtonVisible"
+                  (click)="Login(email.value, pass.value)"
+                  class="btn btn-primary">{{ loginButtonText }}</button>
+                <button *ngIf="logoutButtonVisible" 
+                  (click)="Logout()"
+                  class="btn">Logout</button> 
+           </div> 
+           
+           <div class="form-group">
+               <button *ngIf="loginButtonVisible"
+                  (click)="Register(email.value, pass.value)"
+                  class="btn btn-default">{{ registerButtonText }}</button>    
+            </div>
+   </div>
+    `,
+    styles: [`.little-margin-top { margin-top: 12px }
+    .hide { display: none } `] // beceause [hidden] is not working with .form-control
 })
 export class AuthComponent implements OnInit
 {
@@ -41,14 +59,22 @@ export class AuthComponent implements OnInit
 
   constructor(private _auth: AuthService)
   {
+      this._auth.LoginStatusChanged.subscribe(x=>
+    {
+      console.log("AUTH COMP"+x);
+      
+      if (x)
+      this.SetFormState(AuthFormViewState.LogedIn);
+    else
+      this.SetFormState(AuthFormViewState.Initial);
+    });
+    
   }
 
   ngOnInit()
   {
-    if (this._auth.IsLoggedIn())
-      this.SetFormState(AuthFormViewState.LogedIn);
-    else
-      this.SetFormState(AuthFormViewState.Initial);
+  //  if (this._auth.IsLoggedIn())
+  
   }
 
   private SetFormState(state: AuthFormViewState)
@@ -105,6 +131,8 @@ export class AuthComponent implements OnInit
           break;
         case LoginStatus.WrongPassword: this.SetFormState(AuthFormViewState.WrongPassword);
           break;
+        default: this.SetFormState(AuthFormViewState.Initial);
+          break;
       }
     });
   }
@@ -120,6 +148,8 @@ export class AuthComponent implements OnInit
         case RegisterStatus.Registered: this.SetFormState(AuthFormViewState.LogedIn);
           break;
         case RegisterStatus.EmailTaken: this.SetFormState(AuthFormViewState.EmailTaken);
+          break;
+        default: this.SetFormState(AuthFormViewState.Initial);
           break;
       }
     });

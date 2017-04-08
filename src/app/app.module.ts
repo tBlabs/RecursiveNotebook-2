@@ -1,3 +1,5 @@
+import { DynamicTabsComponent } from './components/tabs/dynamic-tabs.component';
+import { TabsModule } from './components/tabs/tabs.module';
 import { StorageService } from './services/storage.service';
 import { CqrsBus } from './services/cqrs/cqrs-bus.service';
 import { AuthComponent } from './components/auth.component';
@@ -12,12 +14,14 @@ import { AuthService } from "./services/auth.service";
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent
+    AuthComponent,
+  //  DynamicTabsComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    TabsModule
   ],
   providers: [
     CqrsBus,
