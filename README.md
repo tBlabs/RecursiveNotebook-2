@@ -16,7 +16,8 @@ Based on **Angular 2.4.0**. Written in Visual Studio Code.
 
 # How to run
 
-- **ng serve** and then open browser at *localhost:4200*
+- make sure server listen on *http://localhost:1234/api/cqrsbus* (or change endpoint in *cqrs-bus.service.ts*)
+- **ng serve** and then open browser at *http://localhost:4200*
 
 # Backend
 
