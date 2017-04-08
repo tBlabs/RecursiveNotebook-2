@@ -4,7 +4,7 @@ Based on **Angular 2.4.0**. Written in Visual Studio Code.
 
 # Features
 
-- [x] Login/Register 
+- [x] Authentication (with authorization: CanRead, CanAdd, CanEdit, CanDelete)
 - [x] Add/edit/remove notes
 
 # Used patterns and solutions
