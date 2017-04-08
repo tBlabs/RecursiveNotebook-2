@@ -1,3 +1,4 @@
+import { guid } from 'app/common/types';
 import { IQuery } from './../IQuery.interface';
 
 export class RegisterQuery implements IQuery<guid>

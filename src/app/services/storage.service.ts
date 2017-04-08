@@ -1,3 +1,4 @@
+import { guid } from 'app/common/types';
 import { Injectable } from '@angular/core';
 
 @Injectable()

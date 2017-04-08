@@ -1,3 +1,4 @@
+import { guid } from 'app/common/types';
 import { RegisterQuery } from './cqrs/messages/register.query';
 import { LoginQuery } from './cqrs/messages/login.query';
 import { StorageService } from './storage.service';
@@ -6,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable, OnInit } from '@angular/core';
 import { Subject } from "rxjs/Subject";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+
 
 export enum LoginStatus { LoggedIn, UserNotFound, WrongPassword, ConnectionProblem }
 export enum RegisterStatus { Registered, EmailTaken, ConnectionProblem }
@@ -18,17 +20,15 @@ export class AuthService
 
     constructor(private _cqrs: CqrsBus, private _storage: StorageService)
     {
-        console.log("Is logged in?: " + this.IsLoggedIn());
+        console.log("User is " + (this.IsLoggedIn() ? "logged in" : "not logged in"));
 
         this.LoginStatusChanged.next(this.IsLoggedIn());
     }
-
 
     public IsLoggedIn(): boolean
     {
         return (this._storage.GetSessionToken() != "");
     }
-
 
     public Login(email: string, pass: string): Observable<LoginStatus>
     {
@@ -63,7 +63,6 @@ export class AuthService
 
         return ret;
     }
-
 
     public Register(email: string, pass: string): Observable<RegisterStatus>
     {
@@ -101,5 +100,4 @@ export class AuthService
 
         this.LoginStatusChanged.next(false);
     }
-
 }

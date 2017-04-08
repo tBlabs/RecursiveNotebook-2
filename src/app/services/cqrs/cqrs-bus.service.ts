@@ -11,12 +11,9 @@ export class CqrsBus
 {
     private API: string = "http://localhost:1234/api/cqrsbus";
 
-    //  private options: RequestOptions;
-
 
     constructor(private _http: Http, private _storage: StorageService) 
     {
-        //this.options.set("Content-type", "application/json");
     }
 
     public Send(message: ICommand | IQuery<any>): Observable<any>
@@ -38,11 +35,14 @@ export class CqrsBus
 
         return this._http
             .post(this.API, json, options)
-            .do(x => { console.log("CQRS Bus received: " + x) })
+            .do(x => 
+            { 
+                console.log("CQRS Bus received: " + x) 
+            })
             .map(d => d.json())
-            .catch((e, c) => // Jakiego typu jest e ?!?!?!?!!?!?!?!?          
+            .catch((e, c) =>         
             {
-                console.log("catched err: " + e.status);
+                console.log("CQRS Bus catched error: " + e.status);
 
                 return Observable.throw(e.status);
             });

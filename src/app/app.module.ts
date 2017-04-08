@@ -1,8 +1,7 @@
-import { DynamicTabsComponent } from './components/tabs/dynamic-tabs.component';
-import { TabsModule } from './components/tabs/tabs.module';
+import { TabsModule } from './tabs.module';
+import { AuthComponent } from './components/auth/auth.component';
 import { StorageService } from './services/storage.service';
 import { CqrsBus } from './services/cqrs/cqrs-bus.service';
-import { AuthComponent } from './components/auth.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,22 +11,27 @@ import { AuthService } from "./services/auth.service";
 
 
 @NgModule({
-  declarations: [
+  declarations: 
+  [
     AppComponent,
-    AuthComponent,
-  //  DynamicTabsComponent
+    AuthComponent
   ],
-  imports: [
+  imports: 
+  [
     BrowserModule,
     FormsModule,
     HttpModule,
     TabsModule
   ],
-  providers: [
+  providers: 
+  [
     CqrsBus,
     StorageService,
     AuthService
   ],
-  bootstrap: [AppComponent]
+  bootstrap:
+  [
+    AppComponent
+  ]
 })
 export class AppModule { }

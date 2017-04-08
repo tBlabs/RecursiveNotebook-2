@@ -1,3 +1,4 @@
+import { guid } from 'app/common/types';
 import { ICommand } from './../ICommand.interface';
 
 export class DeleteNotesCommand implements ICommand

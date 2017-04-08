@@ -1,8 +1,8 @@
-import { UpdateNoteCommand } from './../../services/cqrs/messages/tab-title-update.command';
-import { Tab } from './../../models/tab.model';
-import { GetNotesQuery } from './../../services/cqrs/messages/get-notes.query';
-import { CqrsBus } from './../../services/cqrs/cqrs-bus.service';
-import { TabsModule } from './tabs.module';
+import { UpdateNoteCommand } from './cqrs/messages/tab-title-update.command';
+import { GetNotesQuery } from './cqrs/messages/get-notes.query';
+import { Tab } from './../models/tab.model';
+import { guid } from 'app/common/types';
+import { CqrsBus } from './cqrs/cqrs-bus.service';
 import { Http, URLSearchParams, RequestOptionsArgs, ResponseContentType, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';

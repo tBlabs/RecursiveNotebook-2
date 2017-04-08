@@ -1,5 +1,5 @@
-import { AuthService, LoginStatus, RegisterStatus } from './../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { AuthService, LoginStatus, RegisterStatus } from './../../services/auth.service';
+import { Component } from '@angular/core';
 
 enum AuthFormViewState
 {
@@ -10,44 +10,46 @@ enum AuthFormViewState
 @Component({
   selector: 'auth',
   template: `
-    <div class="form-inline pull-right little-margin-top">
 
-        <div class="form-group">
-            <input type="text" #email                  
-                 [ngClass]="{ 'alert-danger': emailInputError, 'hide': !inputsVisible }"
-                 placeholder="E-mail"
-                 class="form-control"
-                 value="foo">
-         </div>
-        
-          <div class="form-group" >   
-             <input type="password" #pass                
-                 [ngClass]="{ 'alert-danger': passwordInputError, 'hide': !inputsVisible }"
-                 placeholder="Password" 
-                 class="form-control"
-                 value="bar">
-          </div> 
-        
-           <div class="form-group">
-                <button *ngIf="loginButtonVisible"
-                  (click)="Login(email.value, pass.value)"
-                  class="btn btn-primary">{{ loginButtonText }}</button>
-                <button *ngIf="logoutButtonVisible" 
-                  (click)="Logout()"
-                  class="btn">Logout</button> 
-           </div> 
-           
-           <div class="form-group">
-               <button *ngIf="loginButtonVisible"
-                  (click)="Register(email.value, pass.value)"
-                  class="btn btn-default">{{ registerButtonText }}</button>    
-            </div>
-   </div>
+    <div class="form-inline pull-right little-margin-top">
+    
+      <div class="form-group">
+        <input type="text" #email                  
+              [ngClass]="{ 'alert-danger': emailInputError, 'hide': !inputsVisible }"
+              placeholder="E-mail"
+              class="form-control"
+              value="foo">
+      </div>
+    
+      <div class="form-group" >   
+        <input type="password" #pass                
+              [ngClass]="{ 'alert-danger': passwordInputError, 'hide': !inputsVisible }"
+              placeholder="Password" 
+              class="form-control"
+              value="bar">
+      </div> 
+    
+      <div class="form-group">
+        <button *ngIf="loginButtonVisible"
+                (click)="Login(email.value, pass.value)"
+                class="btn btn-primary">{{ loginButtonText }}</button>
+        <button *ngIf="logoutButtonVisible" 
+                (click)="Logout()"
+                class="btn">Logout</button> 
+      </div> 
+      
+      <div class="form-group">
+        <button *ngIf="loginButtonVisible"
+                (click)="Register(email.value, pass.value)"
+                class="btn btn-default">{{ registerButtonText }}</button>    
+      </div>
+
+    </div>
     `,
-    styles: [`.little-margin-top { margin-top: 12px }
+  styles: [`.little-margin-top { margin-top: 12px }
     .hide { display: none } `] // beceause [hidden] is not working with .form-control
 })
-export class AuthComponent implements OnInit
+export class AuthComponent 
 {
   private inputsVisible: boolean = true;
   private loginButtonVisible: boolean = true;
@@ -59,22 +61,13 @@ export class AuthComponent implements OnInit
 
   constructor(private _auth: AuthService)
   {
-      this._auth.LoginStatusChanged.subscribe(x=>
+    this._auth.LoginStatusChanged.subscribe((loginStatus: boolean) =>
     {
-      console.log("AUTH COMP"+x);
-      
-      if (x)
-      this.SetFormState(AuthFormViewState.LogedIn);
-    else
-      this.SetFormState(AuthFormViewState.Initial);
+      if (loginStatus)
+        this.SetFormState(AuthFormViewState.LogedIn);
+      else
+        this.SetFormState(AuthFormViewState.Initial);
     });
-    
-  }
-
-  ngOnInit()
-  {
-  //  if (this._auth.IsLoggedIn())
-  
   }
 
   private SetFormState(state: AuthFormViewState)

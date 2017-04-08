@@ -1,3 +1,5 @@
+import { guid } from 'app/common/types';
+
 export class Tab // equivalent of NoteDto in backend API
 {
     public id: guid;

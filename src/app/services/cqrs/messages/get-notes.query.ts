@@ -1,3 +1,4 @@
+import { guid } from 'app/common/types';
 import { Tab } from './../../../models/tab.model';
 import { IQuery } from './../IQuery.interface';
 

@@ -1,7 +1,7 @@
+import { TabsService } from './../../services/tabs.service';
 import { Tab } from './../../models/tab.model';
 import { CqrsBus } from './../../services/cqrs/cqrs-bus.service';
 import { Observable } from 'rxjs/Rx';
-import { TabsService } from './tabs.service';
 import { Component, OnChanges, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
@@ -96,12 +96,9 @@ export class TabsListComponent implements OnInit, OnChanges
     }
 
     private Select(tab: Tab): void
-    {console.log("AAAAAAAAAAAAAAA");
-    
+    {
         if (this.selectedTab != tab)
         {
-            console.log("BBBBBBBBBBBBBBBBBB");
-            
             this.selectedTab = tab;
 
             this.onSelect.emit(this.selectedTab);
@@ -128,7 +125,9 @@ export class TabsListComponent implements OnInit, OnChanges
 
                 // Auto open first tab in first line
                 if (this.tabs[0] != null && this.tabs[0].parentId == EmptyGuid)
+                {
                     this.Select(this.tabs[0]);
+                }
             },
             (err) =>
             {
@@ -181,7 +180,7 @@ export class TabsListComponent implements OnInit, OnChanges
             this.tabsService.Delete(tab.id).subscribe(() =>
             {
                 this.tabs.splice(this.tabs.indexOf(tab), 1);
-              //  this.SelectContentTab();//?????????????????
+                //  this.SelectContentTab();//?????????????????
             },
                 (err) =>
                 {
