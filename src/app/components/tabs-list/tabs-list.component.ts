@@ -28,7 +28,8 @@ import { EmptyGuid } from './../../common/guid.extension';
                 class="editable-tab"    
                 [class.active]="tab == selectedTab" 
                 (click)="Select(tab)"
-                (contextmenu)="Delete($event, tab)">   
+                [contextMenu]="tabContextMenu"
+                [contextMenuSubject]="tab">   
                 <a>  
                     <editable-value [class.active-tab]="tab == selectedTab" 
                                     [value]="tab.title"
@@ -53,12 +54,21 @@ import { EmptyGuid } from './../../common/guid.extension';
                     [parentTab]="selectedTab"
                     (onSelect)="onSelect.emit($event)">
         </tabs-list> 
+
+        <context-menu #tabContextMenu>
+            <template contextMenuItem let-item (execute)="DeleteItem($event)">Delete</template>
+        </context-menu>
         
     `,
     styleUrls: ['tabs-list.component.css']
 })
 export class TabsListComponent implements OnInit, OnChanges
 {
+    DeleteItem($event)
+    {
+        this.Delete($event.item);
+    }
+
     @Input() parentTab: Tab = null;
     @Output() onSelect: EventEmitter<Tab> = new EventEmitter<Tab>();
 
@@ -67,7 +77,6 @@ export class TabsListComponent implements OnInit, OnChanges
     private isLoading: boolean = false;
 
     constructor(private tabsService: TabsService, private _title: Title) { }
-
 
     ngOnChanges()
     {
@@ -83,7 +92,6 @@ export class TabsListComponent implements OnInit, OnChanges
             this.LoadTabs(this.parentTab);
         }
     }
-
 
     private SelectContentTab(): void
     {
@@ -155,8 +163,6 @@ export class TabsListComponent implements OnInit, OnChanges
         }
     }
 
-
-
     private UpdateTab(tab: Tab): void
     {
         this.tabsService.Update(tab).subscribe(() => 
@@ -171,11 +177,9 @@ export class TabsListComponent implements OnInit, OnChanges
             });
     }
 
-    private Delete($event: Event, tab: Tab)
+    private Delete(tab: Tab)
     {
-        $event.preventDefault();
-
-        if (confirm("Delete?"))
+        if (confirm(`Delete "${ tab.title }"?`))
         {
             this.tabsService.Delete(tab.id).subscribe(() =>
             {

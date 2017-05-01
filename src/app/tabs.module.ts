@@ -8,6 +8,7 @@ import { Http, HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ContextMenuModule } from 'angular2-contextmenu';
 
 @NgModule({
   imports: 
@@ -15,7 +16,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     HttpModule,
     CommonModule,
-    FocusModule.forRoot()
+    FocusModule.forRoot(),
+    ContextMenuModule
   ],
   exports:
   [

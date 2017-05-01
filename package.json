@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^2.4.0",
     "@angular/platform-browser-dynamic": "^2.4.0",
     "@angular/router": "*",
+    "angular2-contextmenu": "^0.8.2",
     "angular2-focus": "^1.0.3",
     "angular2-uuid": "^1.1.1",
     "core-js": "^2.4.1",
