@@ -4,11 +4,6 @@ import { By } from '@angular/platform-browser';
 import { DebugElement, Type } from '@angular/core';
 
 
-export function Fault(): void
-{
-    expect(true).toBeFalsy();
-}
-
 export class SuperFixture<T>
 {
     private fixture: ComponentFixture<T>;

@@ -18,7 +18,8 @@ enum AuthFormViewState
               [ngClass]="{ 'alert-danger': emailInputError, 'hide': !inputsVisible }"
               placeholder="E-mail"
               class="form-control"
-              value="foo">
+              (keydown.enter)="Login(email.value, pass.value)"
+              value="">
       </div>
     
       <div class="form-group" >   
@@ -26,7 +27,8 @@ enum AuthFormViewState
               [ngClass]="{ 'alert-danger': passwordInputError, 'hide': !inputsVisible }"
               placeholder="Password" 
               class="form-control"
-              value="bar">
+              (keydown.enter)="Login(email.value, pass.value)"
+              value="">
       </div> 
     
       <div class="form-group">

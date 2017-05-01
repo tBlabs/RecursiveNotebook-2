@@ -180,7 +180,7 @@ export class TabsListComponent implements OnInit, OnChanges
             this.tabsService.Delete(tab.id).subscribe(() =>
             {
                 this.tabs.splice(this.tabs.indexOf(tab), 1);
-                //  this.SelectContentTab();//?????????????????
+                this.SelectContentTab();
             },
                 (err) =>
                 {

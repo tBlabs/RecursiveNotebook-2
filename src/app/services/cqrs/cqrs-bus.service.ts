@@ -18,6 +18,7 @@ export class CqrsBus
 
     public Send(message: ICommand | IQuery<any>): Observable<any>
     {
+        // Message class ---into---> { class_name: { class_fields }}
         let j = {};
         j[message.constructor.name] = message;
         let json = JSON.stringify(j);
@@ -35,11 +36,11 @@ export class CqrsBus
 
         return this._http
             .post(this.API, json, options)
+            .map(d => d.json())           
             .do(x => 
             { 
-                console.log("CQRS Bus received: " + x) 
+                console.log("CQRS Bus received: " + JSON.stringify(x)) 
             })
-            .map(d => d.json())
             .catch((e, c) =>         
             {
                 console.log("CQRS Bus catched error: " + e.status);
