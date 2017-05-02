@@ -11,7 +11,7 @@ enum AuthFormViewState
   selector: 'auth',
   template: `
 
-    <div class="form-inline pull-right little-margin-top">
+    <div class="form-inline">
     
       <div class="form-group">
         <input type="text" #email                  
@@ -48,8 +48,11 @@ enum AuthFormViewState
 
     </div>
     `,
-  styles: [`.little-margin-top { margin-top: 12px }
-    .hide { display: none } `] // beceause [hidden] is not working with .form-control
+  styles: 
+  [`
+    .little-margin-top { margin-top: 12px }
+    .hide { display: none } 
+  `] // because [hidden] is not working with .form-control
 })
 export class AuthComponent 
 {

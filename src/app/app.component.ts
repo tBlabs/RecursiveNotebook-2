@@ -1,3 +1,4 @@
+import { AuthComponent } from './components/auth/auth.component';
 import { AuthService, LoginStatus } from './services/auth.service';
 import { Component } from '@angular/core';
 
@@ -5,29 +6,18 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
   
-    <div class="container-fluid">
-
-      <div class="row">
-        <div class="col-sm-4 col-xs-12">
-        <h3>Recursive Notepad</h3>
-        </div>
-        <div class="col-sm-8 col-xs-12">
-          <auth></auth>
-        </div>
-      </div>
-    
-      <div class="row">
-        <tabs *ngIf="showTabs"></tabs>
-      </div>   
-      <div class="row margin-top">
-        <div class="col-sm-3 col-sm-offset-4">
-          <button *ngIf="!showTabs" (click)="Demo()" class="btn btn-danger center-block">See Demo</button>
-        <div>
-      <div>
-    
+    <div class="header">      
+       <span class="title">Recursive Notepad</span> 
+       <auth></auth>        
     </div>
+    
+         
+    <button *ngIf="!showTabs" (click)="Demo()" class="margin-top btn btn-danger center-block">Run Demo</button>
+    <tabs *ngIf="showTabs"></tabs>
+     
+
     `,
-    styles: [`.margin-top { margin-top: 72px }`]
+  styleUrls: ['app.component.css']
 })
 export class AppComponent
 {
@@ -42,7 +32,7 @@ export class AppComponent
 
   Demo()
   {
-    this._auth.Login("demo", "demo").subscribe((s: LoginStatus)=>
+    this._auth.Login("demo", "demo").subscribe((s: LoginStatus) =>
     {
       if (s == LoginStatus.UserNotFound) 
       {

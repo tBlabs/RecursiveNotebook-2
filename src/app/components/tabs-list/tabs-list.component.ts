@@ -107,11 +107,11 @@ export class TabsListComponent implements OnInit, OnChanges
     {
         if (this.selectedTab != tab)
         {
-            this.selectedTab = tab;
+            this.selectedTab = tab; // This will run ngOnChanges and ngOnInit
 
             this.onSelect.emit(this.selectedTab);
 
-            this._title.setTitle(tab.title);
+            this._title.setTitle(tab.title); // TODO remove from here
         }
     }
 
@@ -168,12 +168,12 @@ export class TabsListComponent implements OnInit, OnChanges
 
     private UpdateTab(tab: Tab)
     {
-        return new Promise((res, rej) =>
+        return new Promise((resolve, reject) =>
         {
             this.tabsService.Update(tab).subscribe(() => 
             {
                 // nothing to do      
-                res();
+                resolve();
             },
                 (err) =>
                 {
@@ -181,7 +181,7 @@ export class TabsListComponent implements OnInit, OnChanges
                     else
                         alert("Can not edit tab! Error: " + err);
 
-                    rej();
+                    reject(err);
                 });
         });
 
@@ -244,13 +244,14 @@ export class TabsListComponent implements OnInit, OnChanges
  
             TabsListComponent.movingTab.parentId = contextMenuTab.parentId;
 
-            this.UpdateTab(TabsListComponent.movingTab);
-
-            this.Select(contextMenuTab);
-            this.tabs.push(TabsListComponent.movingTab);
-            this.Select(TabsListComponent.movingTab);
-      
-            TabsListComponent.movingTab = null;
+            this.UpdateTab(TabsListComponent.movingTab).then(()=>
+            {
+                this.Select(contextMenuTab);
+                this.tabs.push(TabsListComponent.movingTab);
+                this.Select(TabsListComponent.movingTab);
+                
+                TabsListComponent.movingTab = null;
+            });          
         }
     }
 }

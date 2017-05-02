@@ -5,25 +5,25 @@ import { Component, OnInit } from '@angular/core';
 @Component({
     selector: 'tabs',
     template: `
+ 
+        <tabs-list (onSelect)="Selected($event)"></tabs-list>
+          
+        <div id="textarea-box">
+            <textarea *ngIf="selectedTab" 
+                      [value]="selectedTab.content" 
+                      (keyup)="content=$event.target.value"></textarea>
+        </div>   
 
-    <tabs-list (onSelect)="Selected($event)"></tabs-list> 
-
-    <textarea *ngIf="selectedTab" 
-              [value]="selectedTab.content" 
-              (keyup)="content=$event.target.value"></textarea>
-
-    <button *ngIf="selectedTab" 
-            [disabled]="selectedTab.content==content" 
-            (click)="Save()" 
-            [innerHTML]="buttonText" 
-            class="btn btn-primary pull-right margin-right">Save</button>
-       
+        <div id="textarea-inputs-box">  
+            <button *ngIf="selectedTab" 
+                    [disabled]="selectedTab.content==content" 
+                    (click)="Save()" 
+                    [innerHTML]="buttonText" 
+                    class="btn btn-primary  margin-right">Save</button>     
+        </div>
+  
     `,
-    styles:
-    [` 
-        textarea { width: 98%; margin: 12px 1%; padding: 12px; border: 1px solid #ddd; height: 300px } 
-        .margin-right { margin-right: 1% }
-    `]
+    styleUrls: ['tabs.component.css']
 })
 export class DynamicTabsComponent
 {
