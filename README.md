@@ -4,7 +4,8 @@ Based on **Angular 2.4.0**. Written in Visual Studio Code.
 
 # Features
 
-- [x] Authentication (with authorization: CanRead, CanAdd, CanEdit, CanDelete)
+- [x] Authentication with JWT tokens 
+- [x] Authorizaition (CanRead, CanAdd, CanEdit, CanDelete)
 - [x] Adding, removing, editing notes
 - [x] Tab context menu: Delete, Cut, Paste
 
