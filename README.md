@@ -5,7 +5,8 @@ Based on **Angular 2.4.0**. Written in Visual Studio Code.
 # Features
 
 - [x] Authentication (with authorization: CanRead, CanAdd, CanEdit, CanDelete)
-- [x] Add/edit/remove notes
+- [x] Adding, removing, editing notes
+- [x] Tab context menu: Delete, Cut, Paste
 
 # Used patterns and solutions
 
@@ -13,6 +14,8 @@ Based on **Angular 2.4.0**. Written in Visual Studio Code.
 - JWT - for user authentication
 - GUID - for user and notes indexing
 - Bootstrap3 - for styling
+- angular2-contextmenu - for context menu
+- angular2-focus - for autofocus on inputs
 
 # How to run
 
@@ -22,5 +25,5 @@ Based on **Angular 2.4.0**. Written in Visual Studio Code.
 
 # Backend
 
-This project needs **RecursiveNotebook2.Server** to work properly.
+This project requires **RecursiveNotebook2.Server** to work properly.
 
