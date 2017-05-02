@@ -56,7 +56,10 @@ import { EmptyGuid } from './../../common/guid.extension';
         </tabs-list> 
 
         <context-menu #tabContextMenu>
-            <template contextMenuItem let-item (execute)="DeleteItem($event)">Delete</template>
+            <template contextMenuItem let-item (execute)="TabContextMenu_DeleteTab($event)">Delete</template>
+            <template contextMenuItem divider="true"></template>
+            <template contextMenuItem let-item [enabled]="!HaveMovingTab()" (execute)="TabContextMenu_CutTab($event)">Cut</template>        
+            <template contextMenuItem let-item [enabled]="HaveMovingTab()" (execute)="TabContextMenu_BindTabToParent($event)">Paste <b>{{CuttedTabName()}}</b> as sibiling</template>
         </context-menu>
         
     `,
@@ -64,13 +67,10 @@ import { EmptyGuid } from './../../common/guid.extension';
 })
 export class TabsListComponent implements OnInit, OnChanges
 {
-    DeleteItem($event)
-    {
-        this.Delete($event.item);
-    }
-
     @Input() parentTab: Tab = null;
     @Output() onSelect: EventEmitter<Tab> = new EventEmitter<Tab>();
+
+    private static movingTab: Tab = null; // Must be static because cutted tab can be shared between many tabs-list's
 
     private tabs: Tab[] = [];
     private selectedTab: Tab = null;
@@ -129,9 +129,12 @@ export class TabsListComponent implements OnInit, OnChanges
             })
             .subscribe((tabs: Tab[]) => 
             {
-                this.tabs = tabs;
+                if (TabsListComponent.movingTab != null)
+                    this.tabs = tabs.filter(t => t.id != TabsListComponent.movingTab.id); // Show all but not cutted one
+                else
+                    this.tabs = tabs;
 
-                // Auto open first tab in first line
+                // Auto open first tab in first line of tabs (with parentId=0)
                 if (this.tabs[0] != null && this.tabs[0].parentId == EmptyGuid)
                 {
                     this.Select(this.tabs[0]);
@@ -163,28 +166,40 @@ export class TabsListComponent implements OnInit, OnChanges
         }
     }
 
-    private UpdateTab(tab: Tab): void
+    private UpdateTab(tab: Tab)
     {
-        this.tabsService.Update(tab).subscribe(() => 
+        return new Promise((res, rej) =>
         {
-            // nothing to do        
-        },
-            (err) =>
+            this.tabsService.Update(tab).subscribe(() => 
             {
-                if (err == 401) alert("You have no permision to edit notes!");
-                else
-                    alert("Can not edit tab title! Error: " + err);
-            });
+                // nothing to do      
+                res();
+            },
+                (err) =>
+                {
+                    if (err == 401) alert("You have no permision to edit notes!");
+                    else
+                        alert("Can not edit tab! Error: " + err);
+
+                    rej();
+                });
+        });
+
     }
 
-    private Delete(tab: Tab)
+    private RemoveTab(tab: Tab): void
+    {
+        this.tabs.splice(this.tabs.indexOf(tab), 1);
+        this.SelectContentTab();
+    }
+
+    private Delete(tab: Tab): void
     {
         if (confirm(`Delete "${ tab.title }"?`))
         {
             this.tabsService.Delete(tab.id).subscribe(() =>
             {
-                this.tabs.splice(this.tabs.indexOf(tab), 1);
-                this.SelectContentTab();
+                this.RemoveTab(tab);
             },
                 (err) =>
                 {
@@ -192,6 +207,50 @@ export class TabsListComponent implements OnInit, OnChanges
                     else
                         alert("Can not delete tab! Error: " + err);
                 });
+        }
+    }
+
+    private CuttedTabName() // This is a function because template can not access static members directly
+    {
+        return (TabsListComponent.movingTab != null) ? TabsListComponent.movingTab.title : "";
+    }
+
+    private HaveMovingTab() // This is a function because template can not access static members directly
+    {
+        return TabsListComponent.movingTab != null;
+    }
+
+    private TabContextMenu_DeleteTab($event)
+    {
+        this.Delete($event.item);
+    }
+
+    private TabContextMenu_CutTab($event)
+    {
+        TabsListComponent.movingTab = $event.item;
+
+        console.log(`Cutting ${TabsListComponent.movingTab.title}`);
+
+        this.RemoveTab(TabsListComponent.movingTab);
+    }
+
+    private TabContextMenu_BindTabToParent($event): void
+    {
+        if (TabsListComponent.movingTab != null)
+        {
+            let contextMenuTab: Tab = $event.item;
+
+            console.log(`Pasting "${ TabsListComponent.movingTab.title }" as child of "${ contextMenuTab.title }"...`);
+ 
+            TabsListComponent.movingTab.parentId = contextMenuTab.parentId;
+
+            this.UpdateTab(TabsListComponent.movingTab);
+
+            this.Select(contextMenuTab);
+            this.tabs.push(TabsListComponent.movingTab);
+            this.Select(TabsListComponent.movingTab);
+      
+            TabsListComponent.movingTab = null;
         }
     }
 }

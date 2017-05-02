@@ -1,4 +1,4 @@
-import { AuthService } from './services/auth.service';
+import { AuthService, LoginStatus } from './services/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -42,6 +42,12 @@ export class AppComponent
 
   Demo()
   {
-    this._auth.Login("demo", "demo");
+    this._auth.Login("demo", "demo").subscribe((s: LoginStatus)=>
+    {
+      if (s == LoginStatus.UserNotFound) 
+      {
+        alert("No demo user in database");
+      }
+    });
   }
 }
